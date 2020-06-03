@@ -1,5 +1,6 @@
 package com.hackerrank.stocktrade.requests;
 
+import com.hackerrank.stocktrade.model.Trade;
 import com.hackerrank.test.utility.Order;
 import com.hackerrank.test.utility.OrderedTestRunner;
 import com.hackerrank.test.utility.ResultMatcher;
@@ -19,6 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,6 +55,8 @@ public class TradesControllerTest {
     public static void tearDownClass() {
         TestWatchman.watchman.createReport(TradesControllerTest.class);
     }
+
+    private List<Trade> store = new ArrayList<>();
 
     /**
      *
@@ -84,6 +92,7 @@ public class TradesControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json)
         )
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated());
 
         /**
@@ -291,12 +300,14 @@ public class TradesControllerTest {
         assertTrue(
                 ResultMatcher.matchJson(
                         mockMvc.perform(get("/trades/1"))
+                                .andDo(MockMvcResultHandlers.print())
                                 .andExpect(status().isOk())
                                 .andReturn()
                                 .getResponse()
                                 .getContentAsString(),
                         res,
-                        true));
+                        true)
+        );
     }
 
     /**

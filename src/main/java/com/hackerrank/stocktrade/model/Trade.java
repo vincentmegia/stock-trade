@@ -1,5 +1,7 @@
 package com.hackerrank.stocktrade.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 
 public class Trade {
@@ -9,6 +11,7 @@ public class Trade {
     private String symbol;
     private Integer shares;
     private Float price;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Timestamp timestamp;
     
     public Trade() {
